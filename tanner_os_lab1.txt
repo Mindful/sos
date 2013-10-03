@@ -1,0 +1,10 @@
+Part 2 Lab exercises
+
+
+1. Starting the VM went fine. I used apt-get to install the VMWare package, ran into a couple problems I had to google around for, but installation and starting the VM went fine.
+
+2. I skipped this step because I typically do user accounts as a matter of security, and no one is connecting to my VM without getting into my local machine first.
+
+3. This went fine, although I admit that I used the C++ program I wrote for Sherry's class yesterday. I sftp'd it onto Ada from my local machine, and then pulled it off with the VM, compiled it, and it ran fine.
+
+4. It was pretty easy to get an SSH connection going from my VM to my local machine; I just installed openssh-server on my local machine and ssh'd to my computer's IP on the Evergreen network. I spent some time trying to get it to work going the other directions with some instructions here: http://www.eldemonionegro.com/blog/archivos/2008/05/18/howto-access-a-virtualbox-guest-machine-throught-ssh-or-how-to-port-forwarding, but didn't get it working. I may come back to this ,but right now given that sftp is fine with put and get, being able to connect one way is more than enough.
