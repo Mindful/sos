@@ -22,3 +22,16 @@ void IntCell::write( int x )
 {
     storedValue = x;
 }
+
+IntCell IntCell::operator+(const IntCell&){
+
+}
+
+void IntCell::operator+=(const IntCell&){
+
+}
+
+int main()
+{
+	return 0;
+}

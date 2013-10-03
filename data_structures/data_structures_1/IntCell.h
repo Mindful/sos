@@ -10,6 +10,9 @@ class IntCell
     explicit IntCell( int initialValue = 0 );
     int read( ) const;
     void write( int x );
+    IntCell operator+(const IntCell&);
+    void operator+=(const IntCell&);
+
 
   private:
     int storedValue;
