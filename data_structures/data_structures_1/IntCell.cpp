@@ -47,6 +47,10 @@ IntCell* IntCell::operator-=(const IntCell& i){
 	return this;
 }
 
+std::ostream& operator<< (std::ostream& stream, const IntCell& i){
+	stream << i.read();
+}
+
 void testCell()
 {
 	IntCell a(3);

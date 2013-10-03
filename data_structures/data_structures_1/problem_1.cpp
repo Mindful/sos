@@ -29,6 +29,6 @@ int main()
   	cout << arr[i] << " ";
   }
   avg /= ARR_SIZE;
-  cout << endl << "Max:" << max << endl << "Min:" << min << endl << "Average:" << avg << endl;
+  cout << endl << "Max:" << max << endl << "Min:" << min << endl << "Average (rounded):" << avg << endl;
   return 0;
 }
