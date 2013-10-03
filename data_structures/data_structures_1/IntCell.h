@@ -11,7 +11,9 @@ class IntCell
     int read( ) const;
     void write( int x );
     IntCell operator+(const IntCell&);
-    void operator+=(const IntCell&);
+    IntCell* operator+=(const IntCell&);
+    IntCell operator-(const IntCell&);
+    IntCell* operator-=(const IntCell&);
 
 
   private:
