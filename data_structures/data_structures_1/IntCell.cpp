@@ -1,5 +1,4 @@
 #include "IntCell.h"
-#include <iostream>
 using namespace std;
 
 /**
@@ -48,7 +47,7 @@ IntCell* IntCell::operator-=(const IntCell& i){
 }
 
 std::ostream& operator<< (std::ostream& stream, const IntCell& i){
-	stream << i.read();
+	stream << i.storedValue;
 }
 
 void testCell()

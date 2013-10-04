@@ -1,6 +1,5 @@
 #include "IntCell.h"
 #include "IntCell.cpp"
-#include <iostream>
 using namespace std;
 
 int main(){
