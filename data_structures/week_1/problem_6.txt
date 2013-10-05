@@ -1,0 +1,1 @@
+The work for problem 6 is in IntCell.cpp and IntCell.h, which are used by several of the other problems.
