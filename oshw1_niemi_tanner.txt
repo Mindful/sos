@@ -1,0 +1,83 @@
+﻿1.1 Memory looks like this:
+300: 3005
+301: 5940
+302: 7006
+.
+.
+.
+940: 0002
+
+
+The PC contains 300, the location of the first instruction. This value is loaded into the IR and the PC is incremented to 301.
+
+
+Now the instruction at location 300 is executed. The first 4 bits with a total value of 3 indicate that we are to load AC from an I/O device, in this case, device 5 as determined by the remaining 12 bits. This device provides a value of 3. The AC now has a value of 3.
+
+
+The next instruction at memory location 301 is fetched and the PC is incremented to 302.
+
+
+Now the instruction at location 301 is executed. The first 4 bits with a total value of 5 indicate that we are to add the contents of a memory location to the AC. The remaining 3 bits specify memory location 940, which contains a value of 2. 2 is added to the value currently in the AC, 3, setting the AC to 5.
+
+
+The next instruction at memory location 302 is fetched and the PC is incremented to 303. 
+
+
+Now the instruction at location 302 is executed. The first 4 bits with a total value of 7 indicate that we are to store the AC value to an external I/O device. The remaining 3 bits with a total value of 6 indicate that we are to store this value in AC device 6. The final instruction stores the value of the AC, which is 5, in I/O device 6.
+
+
+1.2 
+
+
+1. The MAR and MBR are empty.
+2. The MAR is set to 940 and the MBR is 3.
+3. The MAR and MBR remain the same.
+4. The MAR is set to 941. The MBR is set to 2.
+5. The MAR and MBR remain the same.
+6. The MAR is set to 941 and the MBR is set to 5.
+
+
+1.3
+a. The maximum directly addressable memory capacity is 3 bytes.
+b. 
+1. It will take two clock cycles to load the 32-bit address, because each instruction/address will need to be loaded 16-bits at a time. Addresses will be loaded half as quickly as if they were 16 bits.
+2. It will only take one clock cycle to load a 16-bit address.
+c. The program counter needs to have enough bits to address every location in memory (3 bytes in this case). The instruction register only needs to be 1 byte, as the instructions are 8 bits long.
+
+
+1.4
+a. 2^16
+b. 2^8
+c. We need an additional address register and buffer register on the CPU for I/O, giving us (amongst other things) an MAR, MBR, and at least one pair of IOAR and IOBR.
+d. 2^8, and then 2^16. An 8 bit wide I/O port number can be one of 2^8 numbers, giving us a possible 2^8 IO ports. Similarly, a 16 bit wide I/O port number allows us to address 2^16 I/O ports.
+
+
+
+
+1.6
+a. 
+1. A key is pressed. The FGI is set to 1 and an 8-bit word is pushed onto the INPR.
+2. The processor reads the FGI, and if FGI != 0, copies the word from the INPR to the AC.
+3. After AC write finishes, processor sets FGO to 1 and then copies AC to OUTR.
+4. Teletype checks FGO. If FGO = 1, the word in the OUTR is printed.
+
+
+WAT (http://etienne.ece.jhu.edu/etienne/teaching/ECE491/current/Lectures/chap5.pdf maybe?)
+
+
+b. Using the IEN the I/O interface handles checking the FGI/FGO, which means that the CPU doesn’t have to continually check the FGI for input and will be notified by the IEN when there is data to transmit.
+
+
+1.7 DMA takes over the system buses to handle direct data transfer between I/O and memory. Since this transfer is direct, there will be a competition for bus usage if the processor and DMA modules have the same priority. DMA thus gets priority and causes the processor to pause for one bus cycle while the DMA is working. This means that the processor works slower during DMA transfer, but DMA is still more efficient for large volumes of data than interrupt-driven I/O or programmed I/O, because it’s not limited by the speed at which the processor can test/service a device or the processor managing an I/O transfer and handling interrupts.
+
+
+1.10 With code: 
+for (i = 0; i < 20; i++) 
+   for (j = 0; j < 10; j++)
+      a[i] = a[i]*j
+
+
+a. Spatial locality is demonstrated as we iterate through the array a in the outer loop, moving consecutively through values the stored in array a. Spatial locality is represented by the fact that every iteration of the outer loop moves immediately over to the next word in memory as i increases and we move from operating on a[i] to a[i+1]. 
+
+
+b. Temporal locality is demonstrated as we iterate through the inner loop and perform multiplications on a given element of a. We perform 10 multiplications, each one referencing the same two locations in memory - that of j and a[i]. This represents 10 immediately consecutive references of j and a[i] (or more if we include the references of j as we increment it for the loop). It could also arguably be demonstrated to some extent by the repeated referencing of i and j as they are incremented for the purposes of looping.

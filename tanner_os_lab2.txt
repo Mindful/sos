@@ -1,0 +1,20 @@
+In terms of work, I have OS161 up and running, and in a git respository. I've also successfully changed the banner. I was stuck briefly because I was changing the file and recompiling it and then not seeing a new banner, but it's because I was only recompiling but not running the new binary. "pmake" by itself wasn't doing it, but "pmake" and then "pmake install" worked fine.
+
+OS161 is a very simple virtual machine, intended to emulate realistic but predictable hardware, on which we're the ASST0 kernel. Right now, our kernel does a lot of the basics we expect from operating systems. 
+
+Here's a list of the passing and failing tests (indicating what ASST0 currently does and doesn't do)
+OS/161 tests menu
+    [at]  Array test                    [sy2] Lock test             (1)     
+    [bt]  Bitmap test                   [sy3] CV test               (1)     
+    [km1] Kernel malloc test            [fs1] Filesystem test               
+    [km2] kmalloc stress test           [fs2] FS read stress        (4)     
+    [tt1] Thread test 1                 [fs3] FS write stress       (4)     
+    [tt2] Thread test 2                 [fs4] FS write stress 2     (4)     
+    [tt3] Thread test 3                 [fs5] FS create stress      (4)     
+    [sy1] Semaphore test                
+
+    (1) These tests will fail until you finish the synch assignment.
+    (4) These tests may fail until you finish the file system assignment.
+
+
+
