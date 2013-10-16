@@ -27,12 +27,21 @@ class MemoryCell
     bool operator!=(const MemoryCell<T>& rhs){
       return storedValue != rhs.storedValue;
      }
-    friend std::ostream& operator<< (std::ostream& stream, const MemoryCell<T>& rhs){
-      stream << rhs.storedValue;
-    }
+    //This is my << operator as a friend function. It works, it's just commented out so I can have it in
+    //the same file as the other << operator definition.
+    // friend std::ostream& operator<< (std::ostream& stream, const MemoryCell<T>& rhs){
+    //   stream << rhs.storedValue;
+    // }
   private:
     T storedValue;
 };
+
+    //This is my "operator using a member print function". I could have written a specific member function
+    //to print, but it would just have done the same thing that read() does.
+    template <typename T>
+    std::ostream& operator<< (std::ostream& stream, const MemoryCell<T>& rhs){
+      stream << rhs.read();
+    }
 
 int main(){
   MemoryCell<int> arr[5];
