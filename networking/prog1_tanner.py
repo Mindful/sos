@@ -2,7 +2,6 @@
 #Also, as intended, this will only serve files in directories below it (excluding all the exploits I'm sure I haven't thought of)
 
 
-import sys
 try:
 	from socket import *
 	serversocket = socket(AF_INET, SOCK_STREAM)
