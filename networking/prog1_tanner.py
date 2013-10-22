@@ -1,4 +1,7 @@
 #This can't bind properly unless it's run as root (or with sudo, obviously)
+#Also, as intended, this will only serve files in directories below it (excluding all the exploits I'm sure I haven't thought of)
+
+
 import sys
 try:
 	from socket import *
@@ -29,7 +32,6 @@ try:
 			print("...but not found")
 			connectionSocket.send("HTTP/1.1 404 Not Found \n\n".encode('UTF-8'))
 			print()
-			#TODO:Send response message for file not found
 			connectionSocket.close()
 	serversocket.close()
 except Exception as err:
