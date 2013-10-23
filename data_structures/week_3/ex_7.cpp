@@ -1,19 +1,33 @@
 #include <iostream>
+#include <chrono>
+#include <ctime>
 using namespace std;
 
-int i,j,k,n,sum;
+//this uses c++11 libraries, so it must be compiled like:
+//g++ ex_7.cpp -std=c++11
+
+
+int i,j,k,n;
+long sum=0;
+chrono::time_point<std::chrono::system_clock> start, end;
+std::chrono::duration<double> elapsed_seconds;
 
 void reset(){
-	i=j=k=sum=0;
-	n=1000;
+	i=j=k=0;
+	sum=0;
+	start = std::chrono::system_clock::now();
+
 }
 
 int main(){
+	cin >> n;
 	//#1
-	int reset();
+	reset();
 	for(i = 0; i < n; i++){
 		sum++;
 	}
+	elapsed_seconds = std::chrono::system_clock::now() - start;
+	cout << elapsed_seconds.count() << endl;
 
 	//#2
 	reset();
@@ -22,6 +36,8 @@ int main(){
 			sum++;
 		}
 	}
+	elapsed_seconds = std::chrono::system_clock::now() - start;
+	cout << elapsed_seconds.count() << endl;
 
 	//#3
 	reset();
@@ -30,6 +46,8 @@ int main(){
 			sum++;
 		}
 	}
+	elapsed_seconds = std::chrono::system_clock::now() - start;
+	cout << elapsed_seconds.count() << endl;
 
 	//#4
 	reset();
@@ -38,6 +56,8 @@ int main(){
 			sum++;
 		}
 	}
+	elapsed_seconds = std::chrono::system_clock::now() - start;
+	cout << elapsed_seconds.count() << endl;
 
 	//#5
 	reset();
@@ -45,20 +65,27 @@ int main(){
 		for (j = 0; j < i * i; j++){
 			for (k = 0; k < j; k++){
 				sum++;
+				//cout << "5: " << sum << endl;
 			}
 		}
 	}
+	elapsed_seconds = std::chrono::system_clock::now() - start;
+	cout << elapsed_seconds.count() << endl;
 
 	//#6
 	reset();
-	for (i = 1; i < n; i ++){
-		for (j = 1; i < i* i; j++){
+	for (i = 1; i < n; i++){
+		for (j = 1; j < i* i; j++){
 			if (j%i==0){
 				for (k = 0; k < j; k++){
 					sum++;
+					//cout << "6: " << sum << endl;
 				}
 			}
 		}
 	}
+	elapsed_seconds = std::chrono::system_clock::now() - start;
+	cout << elapsed_seconds.count() << endl;
+	return 0;
 
 }
