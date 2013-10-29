@@ -32,7 +32,7 @@ int additionMax(int arr[], int size){
 //and can be handled in one function
 
 //We keep running maxes and mins to find the largest value minus the smallest value before it
-int decreasingMax(int arr[], int size){
+int subtractingMax(int arr[], int size){
 	int min, best, temp;
 	best = 0; //Because the worst value we can never be less than a number minus itself
 	min = arr[0];
@@ -68,6 +68,6 @@ using namespace std;
 
 int main(){
     int a[] = {100,70,60,2};
-    cout << a << " subtracting max, " << decreasingMax(a, 4) << endl;
+    cout << a << " subtracting max, " << subtractingMax(a, 4) << endl;
     return 0;
 }

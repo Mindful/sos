@@ -1,0 +1,112 @@
+﻿Joshua Tanner, Rebar Niemi
+
+
+2.1 
+2/N
+37
+root(N)
+N == NlogN == Nlog(logN) == N((logN)^2) == Nlog(N^2)
+N^1.5
+N^2 == log(N)*N^2
+N^3
+2^(N/2)
+2^N
+
+
+2.2
+a. true
+b. false 
+c. false
+d. false
+
+
+2.3
+The second function grows faster (not going to try to typeset that)
+
+
+2.7
+1. a. n
+b. The actual run time was 1.614*10^-6 seconds for 100, and 9.08*10^-6 seconds for 1000
+c. The difference is a factor of ~10, which would accord with our analysis.
+
+
+2. a. n^2
+b. The actual run time was 8.0707e-05 seconds for 100, and 0.00838232 seconds for 1000. 
+c. The difference is a factor of ~100, which also accords with our analysis.
+
+
+3. a. n^3
+b. The actual run time was 0.00928887 seconds for 100, and 2.58315 seconds for 1000
+c. This is a factor of ~1000, which is in line with our analysis.
+
+
+4. a. n^2
+b. The actual run time was 4.2837e-05 seconds for 100, and 0.00108071 seconds for 1000
+c. This difference is a factor of ~100, in line with our analysis.
+
+
+5. a. n^5
+b. The run time for 100 was 0.0298332 seconds. Anything longer takes too long to return.
+c. This seems to agree with the idea that n = 1000 would take 100000 times longer to return.
+
+
+6. a. n^4
+b. See #5 above, very similar model.
+c. Again, our rough benchmarking seemed to accord with the analysis we made.
+
+
+2.14
+a. 4(3^4) + 8(3^3) + 0(3^2) + 1(3^1) + 2(3^0) = 545
+1st time through loop, i = 4 : poly = 3*0 + a[4] = 0 + 4 = 4
+2nd time, i = 3: poly = 3*4 + a[3] = 12 + 8 = 20
+3rd time, i = 2: poly = 3*20 + a[2] = 60 + 0 = 60
+4th time, i = 1: poly = 3*60 + a[1] = 180 + 1 = 181
+5th time, i = 0: poly = 3*181 + a[0] = 543 + 2 = 545
+
+
+b. The coefficients of the polynomial are stored in an array with the exponent of that coefficient as their index, which allows the loop to iterate through the polynomial starting with a[degree] and sum the total into poly. This works because you can recursively expand the polynomial into the form a0 + x(a1 + x(a2 … + x(an))), and then iteratively “ascend” and calculate the value by substituting the previous term.
+
+
+c. O(n)
+
+
+
+
+2.15
+See ex_15.cpp
+        
+
+
+2.26
+a. The algorithm terminates when there are no more duplicate elements in the last created array (A → B, B → C… and so on).
+
+
+b. The case for N is odd isn’t handled at all. The algorithm will not necessarily find the majority element in an odd sized array.
+
+
+c. O(n^n)
+
+
+d. Hashtable - this would allow for O(n) run time. You iterate through each element, increment the corresponding location in your hash table, and as you iterate you compare if the increment you just did created a number larger than your current maximum. If so, this is the new maximum. Then you’ll have a number that is the largest # of times anything appears in the list, and you compare that to the size of the list. If it is >n/2, it’s the majority. If not, there is no majority.
+
+
+e. 
+max = 0
+max_index = -1
+majority = None
+counts = dict()
+for i in range(n):
+  counts[a[i]] += 1
+  if counts[a[i]] > max:
+    max = counts[a[i]]
+    max_index = a[i]
+if max > n/2:
+  majority = max_index
+
+
+2.28 
+See ex_28.cpp
+
+
+2.31
+It would still work (compile + run) but it would be slower because you would include the midpoint sometimes when you didn’t need to, resulting in more passes through the algorithm than necessary.
