@@ -10,6 +10,7 @@ public:
 
 private:
 	int freeProcs, usedProcs, nextId;
+	list<job> waitQueue, runQueue;
 	const int inputInterval;
 	void tick();
 	void getInput();

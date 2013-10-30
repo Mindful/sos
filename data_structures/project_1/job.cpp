@@ -2,9 +2,9 @@ using namespace std;
 
 class job{
 public:
-	const int procs, totalTicks;
+	const int procs, totalTicks, id;
 	const string description;
-	job(string, int, int);
+	job(string, int, int, int); //description, procs, ticks, id
 
 private:
 	int remainingTicks;
