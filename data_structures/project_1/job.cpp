@@ -4,7 +4,10 @@ class job{
 public:
 	const int procs, totalTicks, id;
 	const string description;
-	job(string, int, int, int); //description, procs, ticks, id
+	job(string job_description, int n_procs, int n_ticks, int job_id) : description(job_description), 
+	procs(n_procs), totalTicks(n_ticks), remainingTicks(n_ticks), id(job_id)
+	{
+	};
 
 private:
 	int remainingTicks;

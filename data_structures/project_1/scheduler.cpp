@@ -18,7 +18,21 @@ scheduler::scheduler(int processors, int inputInterval) : freeProcs(processors),
 }
 
 void scheduler::insertJob(string job_description, int n_procs, int n_ticks){
-	//NYI
+	job j(job_description, n_procs, n_ticks, ++nextId);
+	waitQueue.push_front(j);
+}
+
+job scheduler::findDelShortest(){
+	int min = -1;
+	for(list<job>::iterator it=waitQueue.begin(); it != waitQueue.end(); ++it){
+		if (!it->tick()) 
+		{
+			//TODO: free processors
+			//TODO: print job completion
+			waitQueue.erase(it); //using the iterator we have makes this O(1)
+		}
+	}
+	//if min is still -1, we didn't find anything, and this is a fail.
 }
 
 void scheduler::getInput()
@@ -52,15 +66,15 @@ void scheduler::getInput()
 }
 
 void scheduler::tick(){
-	for(list<job>::iterator it=runQueue.begin(); it != runQueue.end(); ++it){
+	for(list<job>::iterator it=waitQueue.begin(); it != waitQueue.end(); ++it){
 		if (!it->tick()) //if this job is finished
 		{
-			//free processors
-			//print job completion
-			runQueue.erase(it); //using the iterator we have makes this O(1)
+			//TODO: free processors
+			//TODO: print job completion
+			waitQueue.erase(it); //using the iterator we have makes this O(1)
 		}
 	}
-	//traverse the runqueue. tick on each job, and perform removals if their ticks return false
+	//traverse the waitQueue. tick on each job, and perform removals if their ticks return false
 }
 
 void scheduler::start()
