@@ -17,7 +17,7 @@ private:
 	//calls submitJob on any valid input
 	int totalProcs(); //freeProcs + usedProcs
 	//Required functions
-	void insertJob(string job_description, int n_procs, int n_ticks); 
+	void insertJob(string, int, int); 
 	//Validates that n_procs <= totalProcs() && n_ticks > 0
 	//creates a job object based off description, with procs and ticks, and an id of nextId++;
 	job findDelShortest();

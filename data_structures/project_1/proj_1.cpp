@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <list>
+#include <sstream> //For numerical conversions
 #include "job.cpp" //Must come before job. This will probably eventually be delegated to the makefile
 #include "scheduler.cpp" //Includes scheduler.h
 using namespace std;
