@@ -25,7 +25,7 @@ void scheduler::insertJob(string job_description, int n_procs, int n_ticks){
 	//TODO: validate that this isn't more than the processors we have
 	//also validate no negatives
 	job j(job_description, n_procs, n_ticks, ++nextId);
-	waitQueue.push_front(j);
+	waitQueue.push_back(j);
 }
 
 bool scheduler::findDelShortest(job** buffer){
@@ -91,7 +91,7 @@ void scheduler::tick(){
 }
 
 void scheduler::runJob(job *j){
-	runQueue.push_front(*j);
+	runQueue.push_back(*j);
 	freeProcs-=j->procs;
 	usedProcs+=j->procs;
 }
