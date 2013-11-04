@@ -1,3 +1,8 @@
+//So I misread the problem as just "swap two elements"
+//These algorithms work for any two elements, including adjacent elements
+//Admittedly there might be marginally better algorithms for swapping elements
+//if we know they're adjacent, but I feel like the generalizeable ones were harder anyway...
+
 #include <iostream>  
 using namespace std;
 
