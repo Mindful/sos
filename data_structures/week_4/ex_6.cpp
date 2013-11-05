@@ -1,16 +1,15 @@
-// There are people standing in a circle waiting to be executed. The counting out begins at some point in the circle 
-// and proceeds around the circle in a fixed direction. In each step, a certain number of people are skipped and 
-// the next person is executed. The elimination proceeds around the circle (which is 
-// becoming smaller and smaller as the executed people are removed), until only the last person remains, who is given freedom.
+//ANSWERS
+//b. The running time of the program is M*N. Insofar as I can see, this Model runs for (N-1)(M+1) iterations, making the 
+// big O(MN)
+//c. If M=1, the running time of the program is 2*N, which is O(N). I admit that I didn't honestly notice a substantial
+//difference in speed using delete, although I didn't run actual benchmarking because I'd already spent a lot of time
+//on this problem.
 
-// And the book made this about potatoes. 
+
+
 
 
 // The people, in this case, are a circularly linked list
-
-
-
-//b. The running time of the program is 
 
 #include <iostream>
 using namespace std;
