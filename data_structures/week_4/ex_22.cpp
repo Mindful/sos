@@ -6,7 +6,7 @@
 using namespace std;
 
 bool isInteger(char c){
-	if (c >= 48 || c <= 57) return true; //It's an integer
+	if (c >= 48 && c <= 57) return true; //It's an integer
 	else return false;
 }
 
@@ -20,7 +20,7 @@ bool validOperation(char c){
 }
 
 
-//this is working backwards right now; It should run from the bottom of the stack
+//this needs to work differently, probably using its own stack or something
 int evaluate(stack<char>& s){
 	int operands[2];
 	char c;
@@ -64,8 +64,11 @@ int main(){
 		//put it on the stack.
 		//otherise, skip it
 	}
-	//we can't just print this, we have to put it back on the stack and keep running it until the stack is empty
-	cout << evaluate(s) << endl;
+	while (s.size()>1){
+		int i = evaluate(s);
+		cout << i << " evaluated" << endl;
+		s.push(i+'0'); //Convert it back to a character for the stack
+	}
 
 
 }
