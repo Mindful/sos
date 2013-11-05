@@ -10,64 +10,51 @@ bool isInteger(char c){
 	else return false;
 }
 
-bool isBinaryOperator(char c){
+bool isOperator(char c){
 	if (c==42 || c==43 || c==45 || c==47) return true; //It's a binary operator we recognize
 	else return false;
 }
 
-bool validOperation(char c){
-	return isInteger(c) || isBinaryOperator(c);
+int grab(stack<char>&s){
+	int i = s.top();
+	s.pop();
+	return i;
 }
 
-
-//this needs to work differently, probably using its own stack or something
-int evaluate(stack<char>& s){
-	int operands[2];
-	char c;
-	for(int i = 0; i < 2; i++){
-		c=s.top();
-		s.pop();
-		if (isInteger(c)) {
-			cout << "found " << c-'0' << endl;
-			operands[i]=c-'0'; //The value as an integer
-		}
-		else operands[i]=evaluate(s);
-	}
-	//The next thing we pop has to be a binary operator
-	c=s.top();
-	s.pop();
+int evaluate(stack<char>& s, char c){
 	switch (c){
 		case '+':
-			return operands[0]+operands[1];
+			return grab(s)+grab(s);
 		case '-':
-			return operands[0]-operands[1];
+			return grab(s)-grab(s);
 		case '*':
-			return operands[0]*operands[1];
+			return grab(s)*grab(s);
 		case '/':
-			return operands[0]/operands[1];
+			return grab(s)/grab(s);
 		default:
 			break;
 	}
 
 
+
 }
 
 
-//interpretation has to be a recursive call, in case one of your operands is operator
+//interpretation has to be a recursive call, in case one of your grab(s) is operator
 int main(){
 	string expression;
 	getline(cin, expression);
 	stack<char> s;
 	for (int i = 0; i < expression.size(); i++){
-		if (validOperation(expression[i])) s.push(expression[i]);
-		//if it's an operation we recognize or a number
-		//put it on the stack.
-		//otherise, skip it
-	}
-	while (s.size()>1){
-		int i = evaluate(s);
-		cout << i << " evaluated" << endl;
-		s.push(i+'0'); //Convert it back to a character for the stack
+		if(isInteger(expression[i])){
+			s.push(expression[i]-'0');
+			cout << expression[i]-'0' << " found" << endl;
+		}
+		else if (isOperator(expression[i])){
+			int j = evaluate(s,expression[i]);
+			cout << j << " evaluated" << endl;
+			s.push(j);
+		}
 	}
 
 
