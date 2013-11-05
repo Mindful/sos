@@ -1,0 +1,1 @@
+The reason these calls can make the iterator stale is because they can potentially cause the vector to resize. In the case of a vector resize, all the contents of the vector are copied to another array - which is problematic becuase it will invalidate the pointer that the iterator is using to traverse the vector (hence generating a stale iterator).
