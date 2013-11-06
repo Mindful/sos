@@ -48,9 +48,9 @@ int main(){
 	stack<char> s;
 	for (int i = 0; i < expression.size(); i++){
 		if (isOperator(expression[i])){
-			// int j = evaluate(s,expression[i]);
-			// cout << j << " evaluated" << endl;
-			// s.push(j);
+			int j = evaluate(s,expression[i]);
+			cout << j << " evaluated" << endl;
+			s.push(j);
 		} 
 		else if(isInteger(expression[i])){ //This case should read characters until it hits a space
 			int space = expression.find(' ', i);
