@@ -3,6 +3,7 @@
 #include <iostream>
 #include <stack>
 #include <string>
+#include <sstream>
 using namespace std;
 
 bool isInteger(char c){
@@ -40,20 +41,27 @@ int evaluate(stack<char>& s, char c){
 }
 
 
-//interpretation has to be a recursive call, in case one of your grab(s) is operator
+//TODO: this only works for single digit integers; update it to use spaces as a separator
 int main(){
 	string expression;
 	getline(cin, expression);
 	stack<char> s;
 	for (int i = 0; i < expression.size(); i++){
-		if(isInteger(expression[i])){
-			s.push(expression[i]-'0');
-			cout << expression[i]-'0' << " found" << endl;
-		}
-		else if (isOperator(expression[i])){
-			int j = evaluate(s,expression[i]);
-			cout << j << " evaluated" << endl;
-			s.push(j);
+		if (isOperator(expression[i])){
+			// int j = evaluate(s,expression[i]);
+			// cout << j << " evaluated" << endl;
+			// s.push(j);
+		} 
+		else if(isInteger(expression[i])){ //This case should read characters until it hits a space
+			int space = expression.find(' ', i);
+			if (space==string::npos) space=expression.size()-1;
+			string buffer = expression.substr(i, space-i);
+			i = space;
+			int val;
+			stringstream stream(buffer);
+			stream >> val;
+			cout << val << endl;
+			s.push(val);
 		}
 	}
 
