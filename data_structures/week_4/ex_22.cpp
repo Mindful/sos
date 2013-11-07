@@ -16,13 +16,13 @@ bool isOperator(char c){
 	else return false;
 }
 
-int grab(stack<char>&s){
+int grab(stack<int>&s){
 	int i = s.top();
 	s.pop();
 	return i;
 }
 
-int evaluate(stack<char>& s, char c){
+int evaluate(stack<int>& s, char c){
 	switch (c){
 		case '+':
 			return grab(s)+grab(s);
@@ -45,7 +45,7 @@ int evaluate(stack<char>& s, char c){
 int main(){
 	string expression;
 	getline(cin, expression);
-	stack<char> s;
+	stack<int> s;
 	for (int i = 0; i < expression.size(); i++){
 		if (isOperator(expression[i])){
 			int j = evaluate(s,expression[i]);
@@ -54,14 +54,14 @@ int main(){
 		} 
 		else if(isInteger(expression[i])){ //This case should read characters until it hits a space
 			int space = expression.find(' ', i);
-			if (space==string::npos) space=expression.size()-1;
+			if (space==string::npos) space=expression.size();
 			string buffer = expression.substr(i, space-i);
 			i = space;
 			int val;
 			stringstream stream(buffer);
 			stream >> val;
 			cout << val << endl;
-			s.push(val);
+			s.push(val); //not legit. pushing ints onto a char stack
 		}
 	}
 
