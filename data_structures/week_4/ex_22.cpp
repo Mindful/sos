@@ -1,3 +1,5 @@
+//Colin Robinson Helped :)
+
 //The problem didn't specify and this is a pretty substantial thing to do in any case, so this only supports binary operators
 //Also, everything should be separated by _exactly one space_ for this to work properly
 
