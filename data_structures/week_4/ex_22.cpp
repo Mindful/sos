@@ -24,15 +24,17 @@ int grab(stack<int>&s){
 }
 
 int evaluate(stack<int>& s, char c){
+	int first = grab(s);
+	int second = grab(s);
 	switch (c){
 		case '+':
-			return grab(s)+grab(s);
+			return first+second;
 		case '-':
-			return grab(s)-grab(s);
+			return second-first;
 		case '*':
-			return grab(s)*grab(s);
+			return first*second;
 		case '/':
-			return grab(s)/grab(s);
+			return second/first;
 		default:
 			break;
 	}
@@ -63,7 +65,7 @@ int main(){
 			stringstream stream(buffer);
 			stream >> val;
 			cout << val << endl;
-			s.push(val); //not legit. pushing ints onto a char stack
+			s.push(val);
 		}
 	}
 
