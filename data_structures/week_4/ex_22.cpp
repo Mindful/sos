@@ -1,4 +1,5 @@
 //The problem didn't specify and this is a pretty substantial thing to do in any case, so this only supports binary operators
+//Also, everything should be separated by _exactly one space_ for this to work properly
 
 #include <iostream>
 #include <stack>
@@ -44,6 +45,7 @@ int evaluate(stack<int>& s, char c){
 //TODO: this only works for single digit integers; update it to use spaces as a separator
 int main(){
 	string expression;
+	cout << "Please enter one line of operands and operators, each separated by exactly one space" << endl;
 	getline(cin, expression);
 	stack<int> s;
 	for (int i = 0; i < expression.size(); i++){

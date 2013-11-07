@@ -13,7 +13,7 @@ bool isInteger(char c){
 }
 
 bool isOperator(char c){
-	if (c==42 || c==43 || c==45 || c==47) return true; //It's a binary operator we recognize
+	if (c==42 || c==43 || c==45 || c==47 || c=='(') return true; //It's a binary operator we recognize
 	else return false;
 }
 
@@ -24,20 +24,34 @@ int precedence(char c){
 		case '*':
 			return 10;
 		case '/':
-			return 9;
+			return 10;
 		case '+':
 			return 8;
 		case '-':
-			return 7;
+			return 8;
 		default: //It's an integer
 			return -1;
 	}
 }
 
 void clean(stack<char>& s, string& result){
-	while (s.size()>0 && s.top()!=')'){
-		result+=s.top();
-		s.pop();
+	while (s.size()>0){
+		if (s.top()=='('){
+			s.pop();
+			break;
+		}
+		else{
+			result+=s.top();
+			result+=" ";
+			s.pop();
+		}
+	}
+}
+
+void append(string& result, char c){
+	if(c!='('){
+		result+=c;
+		result+=" ";
 	}
 }
 
@@ -47,33 +61,33 @@ int main(){
 	stack<char> s;
 	for (int i = 0; i < expression.size(); i++){
 		if (isOperator(expression[i])){
-			cout << "operator" << endl;
 			if (s.size()==0 || precedence(s.top()) < precedence(expression[i])){
-				cout << "case1" << endl;
 				s.push(expression[i]);
 			}
 			else{
-				while (precedence(s.top()) >= expression[i]){
+				cout << "operator " << expression[i] << endl;
+				while (s.size()!=0 && precedence(s.top()) >= precedence(expression[i])
+					&& s.top()!='('){
 					char temp = s.top();
+
+										cout << "write " << temp << endl;
 					s.pop();
-					result+= temp;
+					append(result, temp);
 				}
 				s.push(expression[i]);
 			}
 		}
-		else if (expression[i]=='('){
-			//it's a parenthesis, make stack related decisions
+		else if (expression[i]==')'){
+			clean(s, result);
 		}
 		else if(isInteger(expression[i])){ //This case should read characters until it hits a space
 			int space = expression.find(' ', i);
 			if (space==string::npos) space=expression.size();
 			string buffer = expression.substr(i, space-i);
 			i = space;
-			int val;
-			stringstream stream(buffer);
-			stream >> val;
-			cout << val << endl;
-			result+=val;
+			cout << buffer << endl;
+			result+=buffer;
+			result+=" ";
 		}
 		else {
 			//invalid input
