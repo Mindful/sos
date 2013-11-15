@@ -1,8 +1,5 @@
 #include "scheduler.h"
-
-//todo: what's generating segmentation faults here is very likely attempting to iterate empty queues
-//the for loops that use waitQueue and runQueue should validate that there are objects in those queues
-//before attempting to perform any kind of iteration on them
+#include <cstdlib>
 
 int getInt(string prompt){
 	int val;
@@ -17,30 +14,36 @@ int getInt(string prompt){
 	}
 }
 
-scheduler::scheduler(int processors, int inputInterval) : freeProcs(processors), inputInterval(inputInterval)
+scheduler::scheduler(int processors, int inputInterval) : freeProcs(processors), inputInterval(inputInterval), nextId(0)
 {
 }
 
-void scheduler::insertJob(string job_description, int n_procs, int n_ticks){
-	//TODO: validate that this isn't more than the processors we have
-	//also validate no negatives
-	job j(job_description, n_procs, n_ticks, ++nextId);
-	waitQueue.push_back(j);
+bool scheduler::insertJob(string job_description, int n_procs, int n_ticks){
+	if (!(n_procs > freeProcs || n_ticks <= 0)){
+		job j(job_description, n_procs, n_ticks, ++nextId);
+		waitQueue.push_back(j);
+		return true;
+	}
+	return false;
 }
 
 bool scheduler::findDelShortest(job** buffer){
-	//todo: I think this is iterating backwards, given we want a queue and not a stack.
-	int min = -1; //invalid min, so we know if it hasn't been set
+	bool found =false;
+	int min;
+	list<job>::iterator shortestJob;
 	for(list<job>::iterator it=waitQueue.begin(); it != waitQueue.end(); ++it){
-		if (it->procs <= freeProcs && (min == -1 || it->totalTicks < min)) 
+		if (it->procs <= freeProcs && (!found || it->totalTicks < min))
 		{
-			*buffer = new job(*it); //Copy the saved job into something so we can return it, since erase cleans memory too
-			waitQueue.erase(it); //using the iterator we have makes this O(1)
-			return true;
+			found = true;
+			min = it->totalTicks;
+			shortestJob = it;
 		}
 	}
-	*buffer = NULL;
-	return false;
+	if (found){
+		*buffer = new job(*shortestJob); //Using the default copy constructor to store our job in the buffer.
+		waitQueue.erase(shortestJob); //using the iterator we have makes this O(1)
+	}	
+	return found;
 }
 
 void scheduler::getInput()
@@ -50,10 +53,13 @@ void scheduler::getInput()
 	int n_procs, n_ticks;
 	while(input)
 	{
-		cout << "Would you like to enter a job? (y/n)" << endl;
+		cout << "Would you like to enter a job? (y/n/exit)" << endl;
 		getline(cin, buffer);
 		if (buffer == "n" || buffer == "N"){
 			return;
+		}
+		else if (buffer == "exit"){
+			exit(0);
 		}
 		else if (buffer != "y" && buffer != "Y"){
 			cout << "Unrecognized input. Please try again" << endl;
@@ -63,7 +69,8 @@ void scheduler::getInput()
 			getline(cin, buffer);
 			n_procs = getInt("Please enter a number of required processors");
 			n_ticks = getInt("Please enter a number of ticks");
-			insertJob(buffer, n_procs, n_ticks); 
+			if (!insertJob(buffer, n_procs, n_ticks))
+				cout << "Job failed: not enough processors or invalid tick quantity." << endl; 
 		}
 
 	}
@@ -96,6 +103,18 @@ void scheduler::runJob(job *j){
 	usedProcs+=j->procs;
 }
 
+void printlist(list<job> & l){
+	for (list<job>::iterator it = l.begin(); it != l.end(); ++it){
+		cout << it->id << " " << it->description << ", ";
+	}
+	cout << endl;
+}
+
+void scheduler::print_jobs(){
+	cout << "waitQueue: " << endl; printlist(waitQueue);
+	cout << "runQueue: " << endl;  printlist(runQueue);
+}
+
 void scheduler::start()
 {
 	int i = 0;
@@ -104,6 +123,7 @@ void scheduler::start()
 		if (++i == inputInterval)
 		{
 			cout << inputInterval << " ticks elapsed." << endl;
+			print_jobs();
 			getInput();
 			i = 0;
 		}
