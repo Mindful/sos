@@ -1,3 +1,5 @@
+#Python 3
+
 #This can't bind properly unless it's run as root (or with sudo, obviously)
 #Also, as intended, this will only serve files in directories below it (excluding all the exploits I'm sure I haven't thought of)
 
