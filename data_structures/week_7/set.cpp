@@ -36,21 +36,22 @@ public:
         }
 
         void increment(){
-        	SetNode *prev;
-        	SetNode *smallest = current, *temp = current;
+        	SetNode *prev, *smallest;
+        	//Smallest is definitely not current, that's all wrong
+        	SetNode *temp = current;
         	bool left = false; //The direction we are trying to go
         	while(!left)
         	{
         		//Try to go right until we've made one right
         		//if we can't go right, go up and try again
         		if (temp->right!=NULL && temp->right!=prev){
-        			if (temp->right->element < smallest->element &&
+        			if ((temp->right->element < smallest->element || smallest==NULL) &&
         				temp->right->element > current->element) smallest = temp->right;
         			temp = temp->right;
         			left = true;
         		}
         		else{
-        			if (temp->parent->element < smallest->element &&
+        			if ((temp->parent->element < smallest->element || smallest==NULL) &&
         				temp->parent->element > current->element) smallest = temp->parent;
         			prev = temp;
         			temp = temp->parent;
@@ -59,7 +60,7 @@ public:
         	//We've now made that right, time to go left as much as we can
         	while(temp->left!=NULL)
         	{
-        		if (temp->left->element < smallest->element &&
+        		if ((temp->left->element < smallest->element || smallest==NULL) &&
         			temp->left->element > current->element) smallest = temp->left;
         		temp = temp->left;
         	}
@@ -172,9 +173,8 @@ public:
 };
 #endif
 
-//Try to go down and to the right - if we can't, we go up (as many times as we have to, 
-//to avoid going backward) and to the right
-//once we've made one right, we continue to go down and to the left until we
-//hit a leaf.
+//TODO:
 
-//during the entire iteration, keep track of the minimum
+//Try to go down and to the right; if we can, we make that right and then lefts, keeping track of the min
+//if we can't (if we're a leaf), we go up until we can make a right and then stop - the first node we CAN
+//make a right at is the node we're looking for
