@@ -83,32 +83,17 @@ class BinarySearchTree
        Comparable element;
        BinaryNode *left;
        BinaryNode *right;
+       BinaryNode *parent;
 
-       BinaryNode( const Comparable & theElement, BinaryNode *lt, BinaryNode *rt )
-         : element( theElement ), left( lt ), right( rt ) { }
+       BinaryNode( const Comparable & theElement, BinaryNode *lt, BinaryNode *rt , BinaryNode *pt)
+         : element( theElement ), left( lt ), right( rt ), parent(pt) { }
     };
 
     BinaryNode *root;
 
-    /**
-     * Internal method to insert into a subtree.
-     * x is the item to insert.
-     * t is the node that roots the subtree.
-     * Set the new root of the subtree.
-     * (SJS) Note that this is not a const method
-     */
-    void insert( const Comparable & x, BinaryNode * & t )
-    {
+    // BST insert was here, but is now deprecated
+    // because it doesn't handle the need for parents
 
-        if( t == NULL ) 
-            t = new BinaryNode( x, NULL, NULL );
-        else if( x < t->element )
-            insert( x, t->left );
-        else if( t->element < x )
-            insert( x, t->right );
-        else
-            ;  // Duplicate; do nothing
-    }
     /**
      * Internal method to remove from a subtree.
      * x is the item to remove.
