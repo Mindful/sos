@@ -19,7 +19,7 @@ scheduler::scheduler(int processors, int inputInterval) : freeProcs(processors),
 }
 
 bool scheduler::insertJob(string job_description, int n_procs, int n_ticks){
-	if (!(n_procs > freeProcs || n_ticks <= 0)){
+	if (!(n_procs > freeProcs + usedProcs || n_ticks <= 0)){
 		job j(job_description, n_procs, n_ticks, ++nextId);
 		waitQueue.push_back(j);
 		return true;
