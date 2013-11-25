@@ -1,0 +1,17 @@
+﻿Joshua Tanner, Colin Robinson
+
+
+Summary:
+We implemented the methods and spec to the best of our abilities, although some areas seemed pretty open to interpretation, and obviously we haven’t learned about priority queues yet. I’d certainly like to redo this once we have. I also think it could have been interesting to approach this from the perspective of using actual processor objects and having jobs run faster on more processors, but that was a little too far from what we were assigned.
+
+
+In terms of design, our Scheduler class has most of our state and methods, and owns both the queues. It also owns the processor count, just as integers. We store the number of free and used processors and not the total count because this seemed more useful, and it’s very easy to get the total count by adding free to used.
+
+
+The Job class is very lightweight and really only exists to hold information and return information about whether or not it’s done using tick(). The data structures we used as our priority queue replacement were simple lists, which we crawl for the first eligible job. Basically, the important logic lives in findDelShortest() method and not in the data structure itself. I know the assignment asks us to justify why we used the data structures we did, but all I can really say here is that this is the best way I could think to implement this not knowing how to use an actual priority queue. The worst case looking for a job is O(N) which is not great, but not the worst.
+
+
+Input is pretty simple; we follow the spec, but nothing is validated. Additionally, we have 5 ticks between every input (this is easy to change) because 1 tick between every input felt really slow. The number of ticks between inputs though is a function of a value passed into the Scheduler constructor.
+
+
+The tests we ran were pretty simple. To make sure that the scheduler would only schedule a job if it fit on the currently unused processors, we ran the program with 4 processors and two 3-processor jobs. To make sure that the scheduler would operate shortest-job-first we started the scheduler with 4 processors and multiple jobs in the wait queue of length 1, 5, 5, 6, and 10, requiring 2 processors each. The jobs finished in order. To make sure that the wait queue was working properly, we ran a test with 4 processors, where we entered one job with 4 procs and 10 ticks, then after 5 ticks added another job with 4 procs and 5 ticks. The first job completed after 5 more ticks and then the second completed after 5 more.
