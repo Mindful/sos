@@ -16,7 +16,7 @@ public:
 	bool tick()
 	{
 		if (--remainingTicks<=0){
-			return (bool)(remainingTicks=0); //Return 0, evaluating to false
+			return (bool)(remainingTicks=0); 
 		}
 		return true;
 	}

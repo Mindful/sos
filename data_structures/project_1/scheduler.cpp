@@ -6,8 +6,8 @@ int getInt(string prompt){
 	string input;
 	while(true){
 		cout << prompt << endl;
-		getline(cin, input); //Get the text value, put it into string input
-		stringstream temp(input); //Convert the text value into a stringstream
+		getline(cin, input); 
+		stringstream temp(input); //Convert the text value into a stringstream, so we can make it an int
 		if (temp >> val){
 			return val;
 		}
@@ -78,10 +78,10 @@ void scheduler::getInput()
 }
 
 void scheduler::tick(){
-	job *j; //holds found job, if any
+	job *j; //buffer that holds found job, if any
 	while (findDelShortest(&j)){
 		runJob(j); //J copied into runqueue
-		delete j; //to prevent memory leak
+		delete j; 
 	}
 
 	for(list<job>::iterator it=runQueue.begin(); it != runQueue.end(); ++it){
