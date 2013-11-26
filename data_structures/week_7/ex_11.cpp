@@ -19,5 +19,10 @@ int main(){
 	 }
 	 Set<int>::iterator i = s.find(6);
 	 cout << "6: " << *i << endl;
+	 s.erase(4);
+	 	 cout << "del 4" << endl;
+	 for (Set<int>::iterator i = s.begin(); i != s.end(); i++){
+	 	cout << *i << endl;
+	 }
 	return 0;
 }

@@ -148,6 +148,15 @@ public:
         }
     }
 
+    int erase( const T& x ){
+        iterator result = find(x);
+        if (result==end()) return 0;
+        else {
+            deleteNode(result.current);
+            return 1;  
+        }
+    } //if X is found, remove it and return 1, otherwise return 0
+
 	pair<iterator,bool> insert( const T& item ){
 		//Start looking at the root
 		return insertFind(item, this->root, NULL);
@@ -174,6 +183,35 @@ public:
 	//if a hint is provided, see if that's a good location to insert, otherwise look normally
 
 private:
+
+    void deleteNode(SetNode* del){
+        //TODO: the parent stuff here will mess up bad on root
+        if( del->left != NULL && del->right != NULL ) // Two children
+        {
+            SetNode *min = this->findMin( del->right );
+            del->element = min->element;
+            deleteNode(min); //This is just min, but deleteNode() needs the proper pointer to clear
+        }
+        else
+        {
+            cout << "a" << endl;
+            SetNode *oldNode = del;
+            SetNode *parent = del->parent;
+            if (parent->right==del){
+                //We're the right child
+                parent->right = ( del->left != NULL ) ? del->left : del->right;
+                cout << "b" << endl;
+                if (parent->right) parent->right->parent = parent;
+            }
+            else{
+                //We're the left child
+                parent->left = ( del->left != NULL ) ? del->left : del->right;
+                cout << "c" << endl;
+                if (parent->left) parent->left->parent = parent;
+            }
+            delete oldNode;
+        }
+    }
 	pair<iterator, bool> insertFind( const T& x, SetNode* & t, SetNode* parent)
     {
 
@@ -200,9 +238,6 @@ private:
 
 
 public:
-	int erase( const T& x ){
-
-	} //if X is found, remove it and return 1, otherwise return 0
 	iterator erase( iterator itr ); //delete item at itr, return itr item after deleted item
 	iterator erase( iterator start, iterator end ); //delete all items between start and end, return end
 	//END IS NOT ERASED
