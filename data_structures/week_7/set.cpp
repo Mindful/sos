@@ -49,32 +49,32 @@ public:
 
 
         void increment(){
-        	SetNode *prev, *smallest;
-        	SetNode *temp = current;
+        	SetNode *prev = NULL, *smallest = current, *temp = current;
             if (temp->right!=NULL) 
             {
                 //We are not at a leaf; make a right and as many lefts as possible
-                printNode(temp);
+                //printNode(temp);
                 temp = temp->right;
-                printNode(temp);
+                //printNode(temp);
                 while(temp->left!=NULL)
                 {
                     temp = temp->left;
-                    printNode(temp);
+                    //printNode(temp);
                 }
                 smallest = temp;
             }
             else {
                 //We are at a leaf. Go up until we can go right and then stop, keeping the minimum
-                while(temp->right==NULL || temp->right==prev){
-                    if ((smallest==NULL || temp->element < smallest->element) &&
-                        temp->element > current->element) smallest = temp;
-                    printNode(temp);
+                //Read one ahead, since we start with current as min (if it's the tree's max)
+                while((temp->right==NULL || temp->right==prev) && temp->parent){
+                    if ((smallest==current || temp->parent->element < smallest->element) 
+                        && temp->parent->element > current->element) smallest = temp->parent;
+                    prev = temp;
                     temp = temp->parent;
                 }
-                printNode(temp);
+                //printNode(temp);
             }
-            current = temp;
+            current = smallest;
         }
 
         bool operator== ( const const_iterator & rhs ) const
