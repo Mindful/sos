@@ -17,5 +17,7 @@ int main(){
 	 for (Set<int>::const_iterator i = s.begin(); i != s.end(); i++){
 	 	cout << *i << endl;
 	 }
+	 Set<int>::const_iterator i = s.find(6);
+	 cout << "6: " << *i << endl;
 	return 0;
 }

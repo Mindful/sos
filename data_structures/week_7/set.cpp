@@ -120,7 +120,7 @@ public:
 
 
 
-    iterator find( const T& x ) const{
+    const_iterator find( const T& x ) const{
         SetNode* current = this->root;
         while(true){
             if(x > current->element){
@@ -129,8 +129,8 @@ public:
             else if (x < current->element){
                 current = current->left;
             }
-            else return const_iterator(this->root);
-            if(current==NULL) return NULL; //"Return the endmarker"
+            else return const_iterator(current);
+            if(current==NULL) return const_iterator(NULL); //"Return the endmarker"
         }
     }
     //returns the item if found, otherwise returns the... "endmarker"?
