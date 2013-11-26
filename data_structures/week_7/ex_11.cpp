@@ -14,10 +14,10 @@ int main(){
 	 s.insert(10);
 	 s.insert(4);
 	 s.insert(6);
-	 for (Set<int>::const_iterator i = s.begin(); i != s.end(); i++){
+	 for (Set<int>::iterator i = s.begin(); i != s.end(); i++){
 	 	cout << *i << endl;
 	 }
-	 Set<int>::const_iterator i = s.find(6);
+	 Set<int>::iterator i = s.find(6);
 	 cout << "6: " << *i << endl;
 	return 0;
 }

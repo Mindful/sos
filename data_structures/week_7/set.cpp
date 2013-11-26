@@ -100,6 +100,20 @@ public:
         const T& operator* ( ) const
           { return const_iterator::operator*( ); }
 
+
+        iterator & operator++ ( )
+        {
+            this->increment();
+            return *this;
+        }
+    
+        iterator operator++ ( int )
+        {
+            iterator old = *this;
+            this->increment();
+            return old;
+        }
+
 	protected:
         iterator( SetNode *p ) : const_iterator( p )
           {}
@@ -109,18 +123,18 @@ public:
 	};
 
 
-	const_iterator begin() const {
-		return const_iterator(this->findMin(this->root));
+	iterator begin() const {
+		return iterator(this->findMin(this->root));
 	}
 
-    const_iterator end() const {
-        return const_iterator(NULL);
+    iterator end() const {
+        return iterator(NULL);
     }
 
 
 
 
-    const_iterator find( const T& x ) const{
+    iterator find( const T& x ) const{
         SetNode* current = this->root;
         while(true){
             if(x > current->element){
@@ -129,11 +143,10 @@ public:
             else if (x < current->element){
                 current = current->left;
             }
-            else return const_iterator(current);
-            if(current==NULL) return const_iterator(NULL); //"Return the endmarker"
+            else return iterator(current);
+            if(current==NULL) return iterator(NULL); //"Return the endmarker"
         }
     }
-    //returns the item if found, otherwise returns the... "endmarker"?
 
 	pair<iterator,bool> insert( const T& item ){
 		//Start looking at the root
