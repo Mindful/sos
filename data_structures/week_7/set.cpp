@@ -35,38 +35,46 @@ public:
             return old;
         }
 
+
+//TODO:
+
+//Try to go down and to the right; if we can, we make that right and then lefts, keeping track of the min
+
+
+//if we can't (if we're a leaf), we go up until we can make a right and then stop - the first node we CAN
+//make a right at is the node we're looking for - no, but it is where we can stop looking.
+//always keep minimums
+
+//the reason we can stop looking once we can go right is because we know all the items to the right are larger
+
+
         void increment(){
         	SetNode *prev, *smallest;
-        	//Smallest is definitely not current, that's all wrong
         	SetNode *temp = current;
-        	bool left = false; //The direction we are trying to go
-        	while(!left)
-        	{
-        		//Try to go right until we've made one right
-        		//if we can't go right, go up and try again
-        		if (temp->right!=NULL && temp->right!=prev){
-        			if ((temp->right->element < smallest->element || smallest==NULL) &&
-        				temp->right->element > current->element) smallest = temp->right;
-        			temp = temp->right;
-        			left = true;
-        		}
-        		else{
-        			if ((temp->parent->element < smallest->element || smallest==NULL) &&
-        				temp->parent->element > current->element) smallest = temp->parent;
-        			prev = temp;
-        			temp = temp->parent;
-        		}
-        	}
-        	//We've now made that right, time to go left as much as we can
-        	while(temp->left!=NULL)
-        	{
-        		if ((temp->left->element < smallest->element || smallest==NULL) &&
-        			temp->left->element > current->element) smallest = temp->left;
-        		temp = temp->left;
-        	}
-        	current = smallest;
-        	//The end result sould be the smallest value we have iterated over that is also
-        	//larger than our current value
+            if (temp->right!=NULL) 
+            {
+                //We are not at a leaf; make a right and as many lefts as possible
+                printNode(temp);
+                temp = temp->right;
+                printNode(temp);
+                while(temp->left!=NULL)
+                {
+                    temp = temp->left;
+                    printNode(temp);
+                }
+                smallest = temp;
+            }
+            else {
+                //We are at a leaf. Go up until we can go right and then stop, keeping the minimum
+                while(temp->right==NULL || temp->right==prev){
+                    if ((smallest==NULL || temp->element < smallest->element) &&
+                        temp->element > current->element) smallest = temp;
+                    printNode(temp);
+                    temp = temp->parent;
+                }
+                printNode(temp);
+            }
+            current = temp;
         }
 
         bool operator== ( const const_iterator & rhs ) const
@@ -156,6 +164,15 @@ private:
             return pair<iterator, bool>(iterator(t), false); //duplicate case
     }
 
+    static void printNode(SetNode* n){
+        cout << "-------------" << endl;
+        cout << "Node: " << n->element << endl;
+        if (n->parent) cout << "Parent: " << n->parent->element << endl;
+        if (n->left) cout << "Left: " << n->left->element << endl;
+        if (n->right) cout << "Right: " << n->right->element << endl;
+        cout << "-------------" << endl;
+    }
+
 
 public:
 	int erase( const T& x ){
@@ -172,9 +189,3 @@ public:
 
 };
 #endif
-
-//TODO:
-
-//Try to go down and to the right; if we can, we make that right and then lefts, keeping track of the min
-//if we can't (if we're a leaf), we go up until we can make a right and then stop - the first node we CAN
-//make a right at is the node we're looking for
