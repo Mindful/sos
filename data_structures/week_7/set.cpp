@@ -11,7 +11,6 @@ template <typename T>
 class Set : private BinarySearchTree<T>{
 typedef typename BinarySearchTree<T>::BinaryNode SetNode;
 
-
 public:
 	class const_iterator{
 	public:
@@ -36,16 +35,10 @@ public:
         }
 
 
-//TODO:
-
-//Try to go down and to the right; if we can, we make that right and then lefts, keeping track of the min
-
-
-//if we can't (if we're a leaf), we go up until we can make a right and then stop - the first node we CAN
-//make a right at is the node we're looking for - no, but it is where we can stop looking.
-//always keep minimums
-
-//the reason we can stop looking once we can go right is because we know all the items to the right are larger
+        //Try to go down and to the right; if we can, we make that right and then lefts, keeping track of the min
+        //if we can't (if we're a leaf), we go up until we can make a right and then stop - the first node we CAN
+        //make a right at is is where we can stop looking.
+        //the reason we can stop looking once we can go right is because we know all the items to the right are larger
 
 
         void increment(){
@@ -53,13 +46,10 @@ public:
             if (temp->right!=NULL) 
             {
                 //We are not at a leaf; make a right and as many lefts as possible
-                //printNode(temp);
                 temp = temp->right;
-                //printNode(temp);
                 while(temp->left!=NULL)
                 {
                     temp = temp->left;
-                    //printNode(temp);
                 }
                 smallest = temp;
             }
@@ -72,13 +62,13 @@ public:
                     prev = temp;
                     temp = temp->parent;
                 }
-                //printNode(temp);
             }
-            current = smallest;
+            if (current!=smallest) current = smallest; 
+            else current = NULL; //We didn't find anything larger, we were at max, so now we're at end
         }
 
         bool operator== ( const const_iterator & rhs ) const
-          { return current->element == rhs.current->element ; }
+          { return current == rhs.current; }
         bool operator!= ( const const_iterator & rhs ) const
           { return !( *this == rhs ); }
     
@@ -122,6 +112,28 @@ public:
 	const_iterator begin() const {
 		return const_iterator(this->findMin(this->root));
 	}
+
+    const_iterator end() const {
+        return const_iterator(NULL);
+    }
+
+
+
+
+    iterator find( const T& x ) const{
+        SetNode* current = this->root;
+        while(true){
+            if(x > current->element){
+                current = current->right;
+            }
+            else if (x < current->element){
+                current = current->left;
+            }
+            else return const_iterator(this->root);
+            if(current==NULL) return NULL; //"Return the endmarker"
+        }
+    }
+    //returns the item if found, otherwise returns the... "endmarker"?
 
 	pair<iterator,bool> insert( const T& item ){
 		//Start looking at the root
@@ -181,9 +193,6 @@ public:
 	iterator erase( iterator itr ); //delete item at itr, return itr item after deleted item
 	iterator erase( iterator start, iterator end ); //delete all items between start and end, return end
 	//END IS NOT ERASED
-
-	iterator find( const T& x ) const;
-	//returns the item if found, otherwise returns the... "endmarker"?
 
 
 
