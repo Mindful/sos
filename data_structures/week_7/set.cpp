@@ -87,7 +87,6 @@ public:
 	};
 
 
-	//TODO: normal iterators need some love
 	class iterator : public const_iterator{
 
     public:
