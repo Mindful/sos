@@ -157,6 +157,21 @@ public:
         }
     } //if X is found, remove it and return 1, otherwise return 0
 
+    iterator erase( iterator itr ){
+        deleteNode(itr++.current);
+        return itr;
+    }//delete item at itr, return itr item after deleted item
+
+
+    iterator erase( iterator start, iterator end ){
+        while(start!=end){
+            cout << "del " << *start << endl;
+            deleteNode(start++.current);
+        }
+        return end;
+    }//delete all items between start and end, return end
+    //END IS NOT ERASED
+
 	pair<iterator,bool> insert( const T& item ){
 		//Start looking at the root
 		return insertFind(item, this->root, NULL);
@@ -185,7 +200,6 @@ public:
 private:
 
     void deleteNode(SetNode* del){
-        //TODO: the parent stuff here will mess up bad on root
         if( del->left != NULL && del->right != NULL ) // Two children
         {
             SetNode *min = this->findMin( del->right );
@@ -194,37 +208,43 @@ private:
         }
         else
         {
-            cout << "a" << endl;
             SetNode *oldNode = del;
             SetNode *parent = del->parent;
-            if (parent->right==del){
-                //We're the right child
-                parent->right = ( del->left != NULL ) ? del->left : del->right;
-                cout << "b" << endl;
-                if (parent->right) parent->right->parent = parent;
+            if(parent){
+                if (parent->right==del){
+                    //We're the right child
+                    parent->right = ( del->left != NULL ) ? del->left : del->right;
+                    if (parent->right) parent->right->parent = parent;
+                }
+                else{
+                    //We're the left child
+                    parent->left = ( del->left != NULL ) ? del->left : del->right;
+                    if (parent->left) parent->left->parent = parent;
+                }
             }
             else{
-                //We're the left child
-                parent->left = ( del->left != NULL ) ? del->left : del->right;
-                cout << "c" << endl;
-                if (parent->left) parent->left->parent = parent;
+                //We're the root, we have no parents :(
+                this->root = ( del->left != NULL ) ? del->left : del->right;
+                this->root->parent=NULL;
             }
             delete oldNode;
         }
     }
 	pair<iterator, bool> insertFind( const T& x, SetNode* & t, SetNode* parent)
     {
-
         if( t == NULL ) {
             t = new SetNode( x, NULL, NULL, parent );
         	return pair<iterator, bool>(iterator(t), true);
         }
-        else if( x < t->element )
+        else if( x < t->element ){
             insertFind( x, t->left, t );
-        else if( t->element < x )
+        }
+        else if( x > t->element ){
             insertFind( x, t->right, t );
-        else
+        }
+        else{
             return pair<iterator, bool>(iterator(t), false); //duplicate case
+        }
     }
 
     static void printNode(SetNode* n){
@@ -235,13 +255,6 @@ private:
         if (n->right) cout << "Right: " << n->right->element << endl;
         cout << "-------------" << endl;
     }
-
-
-public:
-	iterator erase( iterator itr ); //delete item at itr, return itr item after deleted item
-	iterator erase( iterator start, iterator end ); //delete all items between start and end, return end
-	//END IS NOT ERASED
-
 
 
 };

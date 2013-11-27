@@ -2,10 +2,6 @@
 #include <iostream>
 using namespace std;
 
-//TODO: clone needs to be updated to handle the presence of parent nodes
-
-
-
 
 int main(){
 	 Set<int> s;
@@ -18,9 +14,25 @@ int main(){
 	 	cout << *i << endl;
 	 }
 	 Set<int>::iterator i = s.find(6);
-	 cout << "6: " << *i << endl;
+	 cout << "find 6: " << *i << endl;
 	 s.erase(4);
 	 	 cout << "del 4" << endl;
+	 for (Set<int>::iterator i = s.begin(); i != s.end(); i++){
+	 	cout << *i << endl;
+	 }
+	 i = s.erase(i);
+	 cout << "del 6 and now at " << *i << endl;
+	 for (Set<int>::iterator i = s.begin(); i != s.end(); i++){
+	 	cout << *i << endl;
+	 }
+	 for (int i = 0; i < 7; ++i){
+	 	s.insert(i);
+	 }
+	 for (Set<int>::iterator i = s.begin(); i != s.end(); i++){
+	 	cout << *i << endl;
+	 }
+	 cout << "delete from 2-4" << endl;
+	 s.erase(s.find(2), s.find(5));
 	 for (Set<int>::iterator i = s.begin(); i != s.end(); i++){
 	 	cout << *i << endl;
 	 }
