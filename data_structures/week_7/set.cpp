@@ -1,6 +1,6 @@
 #ifndef set
 #define set
-#include "bst.cpp"
+#include "set_bst.cpp"
 #include <utility>  
 
 //So I made the decision to change some of the binary search tree's private states to protected

@@ -63,21 +63,6 @@ class BinarySearchTree
 	remove(x, root);
     }
 
-    int countLeaves(){
-        //Nodes with left & right both == null
-        return leaves(root);
-    }
-
-    int countNodes(){
-        //All nodes
-        return nodes(root);
-    }
-
-    int countFullNodes(){
-        //Nodes where left & right both != null
-        return fullNodes(root);
-    }
-
     /**
      * Deep copy.
      */
@@ -92,56 +77,23 @@ class BinarySearchTree
     }
     
 
-  private:
+  protected:
     struct BinaryNode
     {
        Comparable element;
        BinaryNode *left;
        BinaryNode *right;
+       BinaryNode *parent;
 
-       BinaryNode( const Comparable & theElement, BinaryNode *lt, BinaryNode *rt )
-         : element( theElement ), left( lt ), right( rt ) { }
+       BinaryNode( const Comparable & theElement, BinaryNode *lt, BinaryNode *rt , BinaryNode *pt)
+         : element( theElement ), left( lt ), right( rt ), parent(pt) { }
     };
 
     BinaryNode *root;
 
+    // BST insert was here, but is now deprecated
+    // because it doesn't handle the need for parents
 
-    int leaves(BinaryNode* n){
-        if (n==NULL) return 0;
-        else if (n->left==NULL && n->right==NULL) return 1;
-        else return leaves(n->left)+leaves(n->right);
-    }
-
-
-    int nodes(BinaryNode* n){
-        if (n==NULL) return 0;
-        else return nodes(n->left)+nodes(n->right)+1;
-    }
-
-    int fullNodes(BinaryNode* n){
-        if (n==NULL) return 0;
-        else if (n->left!=NULL && n->right!=NULL) return fullNodes(n->left)+fullNodes(n->right)+1;
-        else return fullNodes(n->left)+fullNodes(n->right);
-    }
-    /**
-     * Internal method to insert into a subtree.
-     * x is the item to insert.
-     * t is the node that roots the subtree.
-     * Set the new root of the subtree.
-     * (SJS) Note that this is not a const method
-     */
-    void insert( const Comparable & x, BinaryNode * & t )
-    {
-
-        if( t == NULL ) 
-            t = new BinaryNode( x, NULL, NULL );
-        else if( x < t->element )
-            insert( x, t->left );
-        else if( t->element < x )
-            insert( x, t->right );
-        else
-            ;  // Duplicate; do nothing
-    }
     /**
      * Internal method to remove from a subtree.
      * x is the item to remove.

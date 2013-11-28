@@ -1,5 +1,4 @@
 //Can't really test these without an AVL tree, so this isn't written to compile
-//mostly just very C++-like pseudocode
 
 // rotate n with left child, right
 void rotateRight (Node* & n) { 
@@ -24,7 +23,7 @@ void rotateLeft (Node* & n) {
 
 
 
-void doubleRotateLeftRight( Node* & n) 
+void doubleRotateLeftRight( Node* & n) //DoubleRotateWithLeft
 { 
  Node* child, subChild; 
  child=n->Left; 
@@ -33,13 +32,13 @@ void doubleRotateLeftRight( Node* & n)
  n->Left=subChild->Right; 
  subChild->Left=child; 
  subChild->Right=n; 
- child->Height=Max( Height(child->Left), Height(child->Right) ) + 1; 
- n->Height=Max( Height(n->Left), Height(n->Right) ) + 1; 
- subChild->Height=Max( child->Height, n->Height ) + 1;
+ child->height=max( height(child->Left), height(child->Right) ) + 1; 
+ n->height=max( height(n->Left), height(n->Right) ) + 1; 
+ subChild->height=max( child->height, n->height ) + 1;
  n = subChild;
 }
 
-void DoubleRotateWithRight( Node* & n ) 
+void doubleRotateRightLeft( Node* & n ) //DoubleRotateWithRight
 { 
  Node* child, subChild; 
  child=n->Right; 
@@ -48,9 +47,9 @@ void DoubleRotateWithRight( Node* & n )
  n->Right=subChild->Left; 
  subChild->Right=child; 
  subChild->Left=n; 
- child->Height=Max( Height(child->Left), Height(child->Right) ) + 1; 
- n->Height=Max( Height(n->Left), Height(n->Right) ) + 1; 
- subChild->Height=Max( n->Height, child->Height ) + 1; 
+ child->height=max( height(child->Left), height(child->Right) ) + 1; 
+ n->height=max( height(n->Left), height(n->Right) ) + 1; 
+ subChild->height=max( n->height, child->height ) + 1; 
  n = subChild;
 }
 
