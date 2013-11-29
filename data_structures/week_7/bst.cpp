@@ -63,8 +63,12 @@ class BinarySearchTree
 	remove(x, root);
     }
 
+    bool similar(const BinarySearchTree & rhs){
+        return similar(this->root, rhs.root);
+    }
+
     int countLeaves(){
-        //Nodes with left & right both == null
+        //Nodes with left & right both == NULL
         return leaves(root);
     }
 
@@ -74,7 +78,7 @@ class BinarySearchTree
     }
 
     int countFullNodes(){
-        //Nodes where left & right both != null
+        //Nodes where left & right both != NULL
         return fullNodes(root);
     }
 
@@ -105,6 +109,16 @@ class BinarySearchTree
 
     BinaryNode *root;
 
+
+    bool similar(BinaryNode* lhs, BinaryNode* rhs){
+        if (lhs==NULL && rhs==NULL) return true;
+        else if ((lhs == NULL && rhs != NULL) || 
+                (lhs != NULL && rhs == NULL))
+        {
+            return false;
+        }
+        else return similar(lhs->left, rhs->left) && similar (lhs->right, rhs->right);
+    }
 
     int leaves(BinaryNode* n){
         if (n==NULL) return 0;
