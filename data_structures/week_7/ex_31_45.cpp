@@ -12,13 +12,6 @@ int main(){
 	for (int i = 0; i < 7; ++i){
 		t1.insert(a[i]);
 	}
-	// t1.insert(11);
-	// t1.insert(5);
-	// t1.insert(3);
-	// t1.insert(6);
-	// t1.insert(4);
-	// t1.insert(8); 
-	// t1.insert(16);
 	cout << "Leaves: " << t1.countLeaves() << endl;
 	cout << "Nodes: " << t1.countNodes() << endl;
 	cout << "Full Nodes: " << t1.countFullNodes() << endl;
