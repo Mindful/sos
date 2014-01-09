@@ -96,6 +96,7 @@ private:
 
 
 int main(){
+	//No parsing, just a successful evaluation
 	ExpressionTree t;
 	t.test();
 	cout << t.evaluate() << endl;
