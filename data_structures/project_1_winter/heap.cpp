@@ -15,10 +15,12 @@ template <typename Comparable>
 class BinaryHeap
 {
   public:
-    explicit BinaryHeap( int capacity = 100 ) : array(capacity), currentSize(capacity){
-    }
-    explicit BinaryHeap( const vector<Comparable> & items )
-      : array( items.size( ) + 1), currentSize( items.size( ) )
+    explicit BinaryHeap(bool (*cmp_function)(const Comparable lhs, const Comparable rhs),
+     int capacity = 0 ) : array(capacity+1), currentSize(0),
+     lessthan(cmp_function){}
+    explicit BinaryHeap(bool (*cmp_function)(const Comparable lhs, const Comparable rhs),
+     const vector<Comparable> & items ) : array( items.size( ) + 1), currentSize( items.size( ) ),
+     lessthan(cmp_function)
     {
         for( int i = 0; i < items.size( ); i++ )
             array[ i + 1 ] = items[ i ];
@@ -27,12 +29,13 @@ class BinaryHeap
 
 
     bool isEmpty( ) const{
-    	return array.empty();
+    	return currentSize==0 || array[1]==NULL;
     }
 
 
     const Comparable & findMin( ) const{
-    	if (isEmpty()) return NULL;
+        if( isEmpty( ) )
+            throw UnderflowException( );
     	return array[1];
 
     }
@@ -47,7 +50,8 @@ class BinaryHeap
     
             // Percolate up
         int hole = ++currentSize;
-        for( ; hole > 1 && x < array[ hole / 2 ]; hole /= 2 )
+        //cout << "hole " << hole << endl;
+        for( ; hole > 1 && lessthan(x,array[ hole / 2 ]); hole /= 2 )
             array[ hole ] = array[ hole / 2 ];
         array[ hole ] = x;
     };
@@ -60,7 +64,6 @@ class BinaryHeap
     {
         if( isEmpty( ) )
             throw UnderflowException( );
-    
         array[ 1 ] = array[ currentSize-- ];
         percolateDown( 1 );
     }
@@ -87,8 +90,10 @@ class BinaryHeap
     }
 
     void printHeap(){
-    	for (int i = 0; i < array.size(); ++i){
-    		cout << array[i] << endl;
+    	for (int i = 0; i < currentSize; ++i){
+            if (array[i]!=NULL){
+                cout << *array[i] << endl;
+            }
     	}
     }
 
@@ -105,6 +110,7 @@ class BinaryHeap
     }
 
   private:
+    bool (*lessthan)(const Comparable lhs, const Comparable rhs); //lhs < rhs
     int                currentSize;  // Number of elements in heap
     /**
      * Establish heap order property from an arbitrary
@@ -129,9 +135,9 @@ class BinaryHeap
         for( ; hole * 2 <= currentSize; hole = child )
         {
             child = hole * 2;
-            if( child != currentSize && array[ child + 1 ] < array[ child ] )
+            if( child != currentSize && lessthan(array[ child + 1 ],array[ child ]) )
                 child++;
-            if( array[ child ] < tmp )
+            if( lessthan(array[ child ], tmp) )
                 array[ hole ] = array[ child ];
             else
                 break;
@@ -142,27 +148,27 @@ class BinaryHeap
 };
 
 
-template <typename T>
-static vector<T> heapSort(vector<T> &arr){
-	BinaryHeap<T> h1(arr);
-	h1.sort(); // The sorted vector will have a leading zero, because the heap also has a leading zero
+// template <typename T>
+// static vector<T> heapSort(vector<T> &arr){
+// 	BinaryHeap<T> h1(arr);
+// 	h1.sort(); // The sorted vector will have a leading zero, because the heap also has a leading zero
 
-	return h1.array; //I'm aware this copies which kind of defeats the purpose of heapsort
-	//and it not using extra space, but I'm just demonstrating method here
-}
+// 	return h1.array; //I'm aware this copies which kind of defeats the purpose of heapsort
+// 	//and it not using extra space, but I'm just demonstrating method here
+// }
 
-int main(){
-	int randifier[] = {3, 8, 1, 2, 5};
-	vector<int> v1(10);
-	for (int i = 0; i < v1.size(); ++i){
-		v1[i] = randifier[i%5] + (v1.size()-i);
-		cout << v1[i] << endl;
-	}
-	cout << "heap sort" << endl;
-	vector<int> v2 = heapSort<int>(v1);
-	for (int i = 0; i < v2.size(); ++i){
-		cout << v2[i] << endl;
-	}
-	return 0;
-}
+// int main(){
+// 	int randifier[] = {3, 8, 1, 2, 5};
+// 	vector<int> v1(10);
+// 	for (int i = 0; i < v1.size(); ++i){
+// 		v1[i] = randifier[i%5] + (v1.size()-i);
+// 		cout << v1[i] << endl;
+// 	}
+// 	cout << "heap sort" << endl;
+// 	vector<int> v2 = heapSort<int>(v1);
+// 	for (int i = 0; i < v2.size(); ++i){
+// 		cout << v2[i] << endl;
+// 	}
+// 	return 0;
+// }
 

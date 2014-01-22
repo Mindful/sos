@@ -146,12 +146,12 @@ class BinarySearchTree
     {
         if (t == NULL)
             return NULL;
-        if (t->leftsize == index)
+        if (t->leftsize == index || (t->left == NULL && t->right == NULL))
             return t;
         else if (index < t->leftsize)
-            get(index, t->left);
+            return get(index, t->left);
         else
-            get(index-(t->leftsize+1), t->right);
+            return get(index-(t->leftsize+1), t->right);
     }
 
 
