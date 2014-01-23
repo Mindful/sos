@@ -90,7 +90,8 @@ class BinaryHeap
     }
 
     void printHeap(){
-    	for (int i = 0; i < currentSize; ++i){
+        // cout << "Printing heap of size :" << currentSize << endl;
+    	for (int i = 1; i <= currentSize; ++i){
             if (array[i]!=NULL){
                 cout << *array[i] << endl;
             }

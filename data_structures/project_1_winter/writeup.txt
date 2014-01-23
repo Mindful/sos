@@ -1,0 +1,20 @@
+Joshua Tanner, Colin Robinson, Rebar Niemi
+
+
+Summary:
+So we completed and turned in this project last quarter, before we'd learned about priority queues. As such, a substantial pirtion of the code here is reused from when we did it last quarter. That said, the primary difference is substantial - we're using a heap for our wait queue instead of a list. This obviously changes some things.
+
+In terms of design, our Scheduler class has most of our state and methods, and owns both the queues. The wait queue is a heap becuase it has to be a priority queue, whereas the runqueue is just a list. The scheduler also owns the processor count, just as integers. We store the number of free and used processors and not the total count because this seemed more useful, and it’s very easy to get the total count by adding free to used.
+
+The Job class is very lightweight and really only exists to hold information and return information about whether or not it’s done using tick(). In justifying data structure choices, explaining why the run queue is a list is pretty easy - there's no reason for it to be anything else. We just need some structure of arbitrary size that can grow and shrink easily. The wait queue is a priority heap because I think that was largely the point of this assignment; the benefit here is the amortized cost in terms of finding the "smallest element" or in this case the job with the lowest number of ticks ("shortest time"). 
+
+As a sidenote, some of this ended up being messier than I wanted it to be as a result of my initially misunderstanding some things about the book's heap implementation. I figured out what I was doing wrong (misusing currentSize, basically) and fixed the problems but it wasn't worth undoing some of the workarounds, so things aren't as lean as they could be. It all works, though.
+
+--Runtimes
+A good portion of the event functions (ReleaseProcs, DecrementTimer, CheckAvailability) are simple integer math and as such are O(1). RunJob is also O(1) because it really only entails copying the job into the run queue, which is a list. Obviously there's a little memory overhead there, though.
+
+FindShortest and DeleteShortest are both O(1) because we're using a heap and the min is always at the top. InsertJob is O(LogN) because it's a heap insert.
+
+Input is pretty simple; we follow the spec, but nothing is validated. Additionally, we have 5 ticks between every input (this is easy to change) because 1 tick between every input felt really slow. The number of ticks between inputs though is a function of a value passed into the Scheduler constructor.
+
+I want to say that the primary shortcoming I see here (and that leaves a bad taste in my mouth) is that the item at the top of the heap or priority queue may always be the one that will take the least time, but it's not always going to "fit" as it were. You can end up in a situation where there's 2 of 4 processors used, and 3 processor 10 ticks job at the top of the waitqueue with one or more 1/2 processor jobs under it. Those jobs might take longer to run, but starting them would likely be more efficient than allowing the queue to be blocked entirely and wasting processors. In the list-based implementation I turned in last quarter I crawled the list for the job with the fewest ticks that also fit in the current processor structure, but that becomes slightly more complicated with a heap and I feel like it also kind of defeats the purpose of using one if we have to start rummaging around instead of just pulling the head of the heap.

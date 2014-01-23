@@ -47,7 +47,7 @@ bool scheduler::findDelShortest(job** buffer){
 		if (j->procs <= freeProcs){
 			found = true;
 			*buffer = j;
-			waitQueue.deleteMin(); //This is segfaulting
+			waitQueue.deleteMin();
 		}
 	}
 	return found;
@@ -125,14 +125,13 @@ void scheduler::print_jobs(){
 void scheduler::start()
 {
 	int i = 0;
-	cout << "scheduler start" << endl;
 	while (true)
 	{
 		if (++i == inputInterval)
 		{
 			cout << inputInterval << " ticks elapsed." << endl;
-			print_jobs();
 			getInput();
+			print_jobs();
 			i = 0;
 		}
 		tick();
