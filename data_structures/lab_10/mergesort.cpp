@@ -61,11 +61,15 @@ void nrc_merge(int array[], int size){
 		for(; curloc<size; curloc+=is){
 
 			int ms = is/2; //Merge size
-			int lSize = ms;
-			int rSize = (curloc+ms>=size) ? size - curloc : ms;
+			int lSize = (curloc+ms>=size) ? size - (curloc) : ms;
+			int rSize = (curloc+lSize>=size) ? size - (curloc+lSize) : ms;
+			cout << "lSize " << lSize << " rSize " << rSize << endl;
 			int lArray[lSize], rArray[rSize];
 
+			cout << "Start copy" << endl;
 			//Iterate over 
+			//TODO: The only remaining problem here is that this loop is retarded
+			//and assumes we're going to go the entire iteration without checking size
 			for (int i = 0; i < is; i++){
 				if(i<ms){
 					cout << "Copy " << array[curloc+i] << " to lArray at " << i << endl;
