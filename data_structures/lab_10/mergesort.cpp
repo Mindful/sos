@@ -1,57 +1,12 @@
 #include <iostream>
 using namespace std;
 
-//Disclaimer: I did not write this recursive mergesort code, some helpful person on stack overflow did
-//I just wanted something I could look at to remind me how mergesort worked
-
-int  merge  (int list1[ ] , int size1 , int list2[ ] , int size2 , int list3[ ], int size3)
-{
-    int i1, i2, i3;
-    if (size1+size2 > size3) {
-        return false;
-    }
-    i1 = 0; i2 = 0; i3 = 0;
-    /* while both lists are non-empty */
-    while (i1 < size1 && i2 < size2) {
-        if (list1[i1] < list2[i2]) {
-            list3[i3++] = list1[i1++];
-        } 
-        else {
-            list3[i3++] = list2[i2++];
-        }
-    }
-    while (i1 < size1) {   
-        /* copy remainder of list1 */
-        list3[i3++] = list1[i1++];
-    }
-    while (i2 < size2) { 
-        /* copy remainder of list2 */
-        list3[i3++] = list2[i2++];
-    }
-    return true;
-}
-
-void merge_sort (int array[], int size)
-{
-    int temp[size];
-    int mid, i;
-    if (size < 2) {
-        return;
-    } 
-    else {
-        mid = size / 2;
-        merge_sort(array, mid);
-        merge_sort(array + mid, size - mid);
-        merge (array, mid, array + mid, size - mid, temp, size);
-        for (i = 0; i < size; i++) {
-            array[i] = temp[i];
-        }
-    }
-}
-
 //I don't see a way to do this in constant extra space, because when we write merged elements to their proper location,
 //if we're using the same array, we risk overwriting a yet unmerged element and effectively duplicating the element we
 //just merged
+
+//The space and time analysis for this, as I've written it, are exactly the same as the normal mergesort (barring
+//the stack frame space we lose to recursion)
 
 void nrc_merge(int array[], int size){
 	int is = 2; //Iteration size
