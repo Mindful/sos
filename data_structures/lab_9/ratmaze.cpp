@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stack>
+#include <vector>
 
 using namespace std;
 
@@ -28,15 +29,15 @@ public:
 //Ones are walls, 0s are viable paths
 //The win condition is reaching the right wall
 bool maze [10][10] = {
-  { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-  { 0, 0, 1, 0, 1, 0, 0, 1, 0, 0},
-  { 1, 0, 1, 0, 1, 1, 0, 1, 0, 1},
-  { 1, 0, 0, 0, 1, 0, 0, 1, 0, 1},
-  { 1, 0, 1, 1, 1, 0, 1, 1, 0, 1},
+  { 1, 1, 1, 0, 1, 1, 1, 1, 1, 1},
+  { 0, 0, 1, 0, 1, 0, 0, 0, 0, 0},
+  { 1, 0, 1, 0, 1, 1, 0, 1, 1, 1},
+  { 1, 0, 0, 0, 0, 0, 0, 1, 0, 1},
+  { 1, 0, 1, 1, 1, 1, 1, 1, 0, 1},
   { 1, 0, 0, 1, 0, 0, 0, 1, 0, 1},
-  { 1, 1, 0, 1, 0, 1, 0, 0, 0, 1},
-  { 1, 0, 0, 1, 0, 1, 1, 1, 0, 1},
-  { 1, 0, 1, 1, 0, 1, 1, 0, 0, 1},
+  { 1, 1, 0, 1, 0, 1, 0, 0, 0, 0},
+  { 1, 0, 0, 1, 0, 1, 1, 1, 1, 1},
+  { 1, 0, 1, 1, 0, 0, 0, 0, 0, 0},
   { 1, 0, 0, 0, 0, 1, 1, 1, 1, 1}
   };
 
@@ -47,6 +48,8 @@ private:
 	int x,y, width, height;
 	bool navigating;
 	direction lastPath;
+	vector< stack<pathRecord> > paths;
+	stack<pathRecord> shortestPath;
 
 public:
 	navigator(bool maze[][10], int height) : navigating(true),x(0),y(0),height(height){
@@ -82,12 +85,12 @@ public:
 			p.south = taken;
 			lastPath = south;
 			--y;
-			cout << "v to (" << x << "," << y << ")" << endl;
+			cout << "^ to (" << x << "," << y << ")" << endl;
 		} else if (p.north == viable){
 			p.north = taken;
 			lastPath = north;
 			++y;
-			cout << "^ to (" << x << "," << y << ")" << endl;
+			cout << "v to (" << x << "," << y << ")" << endl;
 		} else if (p.west == viable){
 			p.west = taken;
 			lastPath = west;
@@ -106,11 +109,11 @@ public:
 
 	void navigate(){
 		while(navigating){
-			if (x == width-1){
-				cout << "End of maze reached!" << endl; //x >= width -1 means we've finished
-				navigating = false;
-				break;
-			}
+			// if (x == width-1){
+			// 	cout << "End of maze reached!" << endl; //x >= width -1 means we've finished
+			// 	navigating = false;
+			// 	break;
+			// }
 			pathRecord p(x,y);
 			//These checks also need to look at the top of the stack
 
@@ -131,7 +134,12 @@ public:
 			if (lastPath==west) p.east=taken;
 			if (lastPath==east) p.west=taken;
 
-			if (!move(p)){
+			if (x == width-1 || !move(p)){
+			        if (x == width-1) {
+				  cout << " ~*~ Path found! ~*~" << endl;
+				  pathStack.push(p);
+				  paths.push_back(pathStack);
+				}
 
 				bool stuck = true;
 				//Needs to work better when blocked
@@ -143,22 +151,39 @@ public:
 						break;
 					}
 
-					pathStack.pop();
 					p = pathStack.top(); //Get a location
+					pathStack.pop();
 					x = p.x;
 					y = p.y;
 					if(move(p)) stuck = false;
 				}
 			} else pathStack.push(p); //Push the current location, either new or backed into
 		}
+		if ( paths.size() ){
+		    shortestPath = paths[0];
+		    for (int i=0; i<paths.size(); ++i){
+			if ( paths[i].size() < shortestPath.size() )
+			   shortestPath = paths[i];
+		    }
+		} else {
+		    cout << "No paths found" << endl;
+		}
 	}
-
+	
+	void printShortestPath(){
+	     while( !paths.empty() && !shortestPath.empty()){
+		  cout << "(" << shortestPath.top().x << " , " << shortestPath.top().y << ")" << endl;
+		  shortestPath.pop();
+	     }
+	}
 };
+
 
 
 
 int main(){
 	navigator n(maze,10);
 	n.navigate();
+	n.printShortestPath();
 	return 0;
 }
