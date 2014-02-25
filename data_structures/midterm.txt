@@ -1,0 +1,79 @@
+
+
+2. This is true. Because we know the elements are inserted in order, we know that each new element will be the new largest element in the heap, and that there will never be larger elements in the heap already. As such, every new inserted element will always become a leaf of the rightmost node which has an open leaf slot, by the definition of a leftist heap merge. In the case of nodes wil no children, the newly inserted node will immediately be switched to a left child of its parent because of its longer null path length. Once this has happened twice, the rightmost node will be full (with two leaves) at which point it will be switched with its left sibling because its null path length will be too large, again by the definition of a leftist heap merge. Once two nodes are full, their parent's null path length will be too large, and it will be switched with its left sibling, recursively up the entire tree. We can see that this will gaurantee for any size tree that these insertions will always build as leaves of the tree, with open space on the right being preserved until the tree is entirely full by the null path length swaps performed as part of leftist heap merges. Knowing this, it is clear that insertions of 1 to 2^(k-1) will build a full tree, because we know that the insertions will always be leaves until there are no more empty leaves, and this is the exact number of nodes in a full binary tree, which is also balanced.
+
+3. This is also true. For the same reasons as the leftist heap (inserted in order and definition of skew heap merge) we can see that every new inserted element will always become a leaf of the rightmost node which has an open leaf slot. If we can establish that skew heap style swaps preserve open leaf slots until the tree is entirely full in the same way a leftist heap does, then this is obviously also true for skew heaps. Skew heaps swap the children of every node above the node which gained a child in an insertion along the path to the root, as well as the children of the node that gained a child, by the definition of skew heaps. In the case of the node newly gaining a child, the swap ensures like leftist heaps that single nodes will always have an open right slot (because the newly inserted node will be inserted into the right and swapped to the left). All that is left is to prove that skew heaps maintain a rightmost node with an open leaf slot until they are full. We can see that this is the case because for a given level of a full tree, there are 2^k nodes. Each swap will make right nodes the left nodes of their parents, so the rightmost node becomes the left node of its parent, which becomes the left node of its parent, etc. However, since only the right side of the tree is swapped, every node is not touched every time. It takes a given node on a level with 2^k nodes 2^k swaps to reach the place it was previously, which means that the nodes will be in the same position they were in originally once they all have one child, and again once they all have two children. This gaurantees that children are distributed such as to create a full tree, similarly to leftist heaps.
+
+3. Code for #3 below. Change #A doesn't do very much; an empty carry tree and no trees left in H2 means that the algorithm was largely done with its work anyway.
+
+    /**
+     * Merge rhs into the priority queue.
+     * rhs becomes empty. rhs must be different from this.
+     */
+     //H2 = RHS
+    void merge( BinomialQueue & rhs )
+    {
+        if( this == &rhs )    // Avoid aliasing problems
+            return;
+    
+        currentSize += rhs.currentSize;
+    
+        if( currentSize > capacity( ) )
+        {
+            int oldNumTrees = theTrees.size( );
+            int newNumTrees = max( theTrees.size( ), rhs.theTrees.size( ) ) + 1;
+            theTrees.resize( newNumTrees );
+            for( int i = oldNumTrees; i < newNumTrees; i++ )
+                theTrees[ i ] = NULL;
+        }
+    
+        BinomialNode *carry = NULL;
+        for( int i = 0, j = 1; j <= currentSize; i++, j *= 2 )
+        {
+            BinomialNode *t1 = theTrees[ i ];
+            BinomialNode *t2 = i < rhs.theTrees.size( ) ? rhs.theTrees[ i ] 
+                                                        : NULL;
+            int whichCase = t1 == NULL ? 0 : 1;
+            whichCase += t2 == NULL ? 0 : 2;
+            whichCase += carry == NULL ? 0 : 4;
+    
+            switch( whichCase )
+            {
+              case 0: /* No trees */
+                //-----------------
+                //Terminate here for #A of this problem
+                //------------------
+                return;
+              case 1: /* Only this */
+                break;
+              case 2: /* Only rhs */
+                theTrees[ i ] = t2;
+                rhs.theTrees[ i ] = NULL;
+                break;
+              case 4: /* Only carry */
+                theTrees[ i ] = carry;
+                carry = NULL;
+                break;
+              case 3: /* this and rhs */
+                carry = combineTrees( t1, t2 );
+                theTrees[ i ] = rhs.theTrees[ i ] = NULL;
+                break;
+              case 5: /* this and carry */
+                carry = combineTrees( t1, carry );
+                theTrees[ i ] = NULL;
+              case 6: /* rhs and carry */
+                carry = combineTrees( t2, carry );
+                rhs.theTrees[ i ] = NULL;
+                break;
+              case 7: /* All three */
+                theTrees[ i ] = carry;
+                carry = combineTrees( t1, t2 );
+                rhs.theTrees[ i ] = NULL;
+                break;
+            }
+        }
+    
+        for( int k = 0; k < rhs.theTrees.size( ); k++ )
+            rhs.theTrees[ k ] = NULL;
+        rhs.currentSize = 0;
+    }
