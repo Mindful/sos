@@ -1,9 +1,12 @@
 //unordered_map is a c++11 thing, so compilation may have to look like
 //g++ graph.cpp -std=c++11
 
-//I would note that given that I'm storing things as an adjacency list, the easier
-//way to do this would just be to sort these as a list of integers based on the size
-//of their adjacent vectors, which would be outrageously trivial
+//There's some redundant or less-elegant-than-possible design here because I spent a little time
+//confused about which parts of the algorithm referred to adjacent nodes and which referred only
+//to nodes that were going "in" to other nodes. Also, there's a lot of extra code jsut to handle
+//reading input and such. The input handling isn't super robust but it works with this file
+
+//just run ./a.out test1.txt
 
 #include <vector>
 #include <queue>
@@ -16,18 +19,13 @@ using namespace std;
 class vertex{
 	string name;
 	vector<vertex*> adjacent;
+	int indegree;
 
 public:
 
-	vertex(string n):name(n){}
+	vertex(string n):name(n), indegree(0){}
 
-	void setAdjacent(vertex* v[], int size){
-		adjacent.clear();
-		adjacent.resize(size);
-		for (int i = 0; i < size; ++i){
-			adjacent[i]=v[i];
-		}
-	}
+	vector<vertex*>& getAdjacent(){return adjacent;}
 
 	void addAdjacent(vertex* v){
 		adjacent.push_back(v);
@@ -36,7 +34,7 @@ public:
 	string getName(){return name;}
 
 	string info(){
-		string s = name+" adjacent to: [";
+		string s = name+" input from: [";
 		for(int i = 0; i < adjacent.size(); ++i){
 			if(adjacent[i]!=NULL){
 				s+=adjacent[i]->getName()+",";
@@ -46,9 +44,10 @@ public:
 		return s;
 	}
 
-	int indegree(){return adjacent.size();}
+	int getIndegree(){return indegree;}
 
-	void reduce_indegree(){adjacent.pop_back();}
+	void reduce_indegree(){--indegree;}
+	void increase_indegree(){++indegree;}
 };
 
 
@@ -58,17 +57,38 @@ void topsort(vector<vertex*> vv){
 	vertex* arr[vv.size()];
 
 	for(int i = 0; i < vv.size(); ++i){
-		if(vv[i]->indegree()==0){
-			vq.push(vq);
+		cout << vv[i]->getName() << " indgree: " << vv[i]->getIndegree() << endl;
+		if(vv[i]->getIndegree()==0){
+			cout << "push " << vv[i]->getName() << endl;
+			vq.push(vv[i]);
 		}
 	}
 
-	while(!vq.empty()!){
+	while(!vq.empty()){
 		vertex* v = vq.front();
 		vq.pop();
 		//our equivalent of v.topNum = ++counter
 		arr[counter++]=v;
+
+		for (int i = 0; i < v->getAdjacent().size(); ++i){
+			vertex* current = v->getAdjacent()[i];
+			current->reduce_indegree();
+			cout << "reduce indegree on " << current->getName() << endl;
+			if(current->getIndegree()==0){
+				vq.push(current);
+				cout << "push " << vv[i]->getName() << endl;
+			}
+		}
 		
+	}
+
+	if (counter!=vv.size()){
+		cout << "Counter (" << counter << ") did not equal vertex count(" << vv.size() <<
+			"); the graph contains cycles." << endl;
+	}
+
+	for (int i = 0; i < vv.size(); ++i){
+		cout << arr[i]->getName() << endl;
 	}
 
 }
@@ -109,6 +129,7 @@ int main(int argc, char* argv[]) {
    		string v2 = line.substr(0, line.find(" "));
    		//All the vertices should be in the map already
    		m[v1]->addAdjacent(m[v2]);
+   		m[v1]->increase_indegree();
    		m[v2]->addAdjacent(m[v1]);
    	}
 
