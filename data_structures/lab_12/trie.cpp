@@ -13,8 +13,9 @@ private:
 	struct trieNode{
 		char character;
 		vector<trieNode*> children;
+		string value;
 
-		trieNode(char c) : character(c){};
+		trieNode(char c, string s) : character(c), value(s){};
 	};
 
 
@@ -22,8 +23,7 @@ private:
 	//root node at all - just a bunch of first children.
 	vector<trieNode*> root;
 
-	//this is running infinitely if it finds any matches
-	pair<int, trieNode*> trieMatchInternal(string s){
+	pair<string, trieNode*> trieMatchInternal(string s){
 		char curChar = s[0];
 		trieNode* curNode = NULL;
 		int matches = 0;
@@ -35,14 +35,14 @@ private:
 		}
 
 		if (!matches){
-			pair<int, trieNode*> p(0, NULL);
+			pair<string, trieNode*> p("", NULL);
 			return p;
 		}
 
 		//We have a first node, we can start a traversal
 		bool next = false;
 		for(; matches <= s.length();){
-			cout << "curNode: " << curNode->character << " matches: " << matches << endl;
+			
 			for(int i = 0; i < curNode->children.size(); ++i){
 				if(curNode->children[i]->character==curChar){
 					curNode = curNode->children[i];
@@ -51,7 +51,7 @@ private:
 				}
 			}
 			if(!next){
-				pair<int, trieNode*> p(matches, curNode);
+				pair<string, trieNode*> p(curNode->value, curNode);
 				return p;
 			} else {
 				next = false;
@@ -60,35 +60,75 @@ private:
 	}
 
 public:
-	int trieMatch(string s){
+
+	//It seems a little weird to have an iterator.. and the original reason
+	//that I wrote one isn't really valid now that I have a better understanding
+	//of the problem. Oh well, it was interesting.
+	class const_iterator{
+	protected:
+		trieNode* current;
+
+		const_iterator(trieNode* t) : current(t){}
+
+
+	public:
+		const_iterator() : current(NULL){}
+
+        char & operator* ( ) const
+          { return current->character; }
+
+        bool bad(){return current==NULL;}
+
+        bool tryNext(char c){
+        	for(int i = 0; i < current->children.size(); ++i){
+        		if(current->children[i]->character==c){
+        			current = current->children[i];
+        			return true;
+        		}
+        	}
+        	return false;
+        }
+
+    friend class trie;
+	};
+
+	const_iterator tryFirst(char c){
+		for(int i = 0; i < root.size(); ++i){
+			if(root[i]->character==c){
+				const_iterator r(root[i]);
+				return r;
+			}
+		}
+		const_iterator r;
+		return r;
+	}
+
+	string trieMatch(string s){
 		return trieMatchInternal(s).first;
 	}
 
 	void trieAdd(string s){
-		cout << "call add with string: " << s << endl;
-		pair<int, trieNode*> matchResults = trieMatchInternal(s);
+		pair<string, trieNode*> matchResults = trieMatchInternal(s);
 		trieNode * curNode = matchResults.second;
 		int loc = 0;
 		char curChar = s[loc];
 		if(!curNode){
-			curNode = new trieNode(curChar);
+			curNode = new trieNode(curChar, s.substr(0, loc+1));
 			root.push_back(curNode);
 			++loc;
-			cout << "new curnode : " << curNode->character << endl;
 		} else{
-			loc = matchResults.first; 
+			loc = matchResults.first.length(); 
 			//The # of matches is 1 more than the last match's place in the string,
-			//which is also the location of the first character we have to insert
-			cout << "found curnode : " << curNode->character << endl;		
+			//which is also the location of the first character we have to insert		
 		}
 		curChar = s[loc];
 		trieNode * temp = NULL;
-		cout << "reach loop " << endl;
+		
 		for(;loc<s.length();++loc){
-			temp = new trieNode(s[loc]);
+			temp = new trieNode(s[loc], s.substr(0, loc+1));
 			curNode->children.push_back(temp);
 			curNode = temp;
-			cout << "curNode: " << curNode->character << " stringLoc: " << loc << endl;
+			
 		}
 	}
 
